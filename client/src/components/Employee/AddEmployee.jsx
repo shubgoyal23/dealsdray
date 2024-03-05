@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
+import Loading from "../Loading/Loading"
 
 function AddEmplayee() {
    const [err, setErr] = useState(null);
@@ -9,6 +10,7 @@ function AddEmplayee() {
    const [userDate, setUserData] = useState([]);
    const [newForm, setNewForm] = useState("");
    const [file, setfile] = useState(null);
+   const [loading, setLoading] = useState(false);
 
    const {
       register,
@@ -17,6 +19,8 @@ function AddEmplayee() {
    } = useForm();
 
    const onSubmit = (data) => {
+      setLoading(true)
+
       const formData = new FormData();
       formData.append("avatar", file);
       formData.append("fullname", data.fullname);
@@ -27,12 +31,13 @@ function AddEmplayee() {
       formData.append("gender", data.gender);
 
       setErr(null);
+
       let url;
       if (newForm) {
          url = "http://localhost:8000/api/v1/employee/create";
       } else {
-        formData.append("id", userDate._id);
-         url = "http://localhost:8000/api/v1/employee/edit";
+         formData.append("id", userDate._id);
+         url = `http://localhost:8000/api/v1/employee/edit/${userDate?._id}`
       }
 
       fetch(url, {
@@ -54,7 +59,9 @@ function AddEmplayee() {
          .catch((error) => {
             setErr(error);
             console.log(error);
-         });
+         }).finally(()=>{
+            setLoading(false)
+         })
    };
 
    const finduser = (id) => {
@@ -83,9 +90,9 @@ function AddEmplayee() {
       }
    }, [id]);
 
-
    return (
       <div className="w-4/5 mx-auto my-10 bg-gray-100 p-6 shadow-lg border border-gray-300 rounded-lg">
+         {loading? <Loading /> : ""}
          <h2 className="text-xl text-blue-600 font-bold underline text-center">
             {newForm ? "Create Employee" : "Edit Employee"}
          </h2>
@@ -225,21 +232,15 @@ function AddEmplayee() {
                </div>
                <div className="col-span-6 sm:col-span-3">
                   <label
-                     htmlFor="course"
+                     htmlFor=""
                      className="text-sm block font-medium text-gray-700 dark:text-gray-200"
                   >
                      Course
                   </label>
-                  <select
-                     name="course"
-                     id="course"
-                     className="w-full outline-none"
-                     {...register("course", { required: true })}
-                  >
-                     <option value="MCA">MCA</option>
-                     <option value="BCA">BCA</option>
-                     <option value="BSC">BSC</option>
-                  </select>
+
+                  <label> <input type="checkbox" value="MCA" {...register("course")} /> MCA </label>
+                  <label> <input type="checkbox" value="BCA" {...register("course")} /> BCA </label>
+                  <label> <input type="checkbox" value="BSC" {...register("course")} /> BSC </label>
                </div>
 
                <div className="col-span-6">
@@ -271,7 +272,7 @@ function AddEmplayee() {
                   className="inline-block shrink-0 rounded-md border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring active:text-blue-500 dark:hover:bg-blue-700 dark:hover:text-white"
                   type="submit"
                >
-                  Create an account
+                  {newForm? "Create" : "Edit"}
                </button>
             </div>
          </form>

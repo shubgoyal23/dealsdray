@@ -2,11 +2,11 @@ import React from "react";
 import convertDate from "./convertdate";
 import { Link, useNavigate } from "react-router-dom";
 
-function EmployeeDetails({ data }) {
+function EmployeeDetails({ data, setList }) {
    const navigate = useNavigate()
    function deleteuser(){
-      fetch("http://localhost:8000/api/v1/employee/delete", {
-         method: "POST",
+      fetch(`http://localhost:8000/api/v1/employee/edit/${data?._id}`, {
+         method: "DELETE",
          credentials: "include",
          headers: {
             "Content-Type": "application/json",
@@ -14,10 +14,9 @@ function EmployeeDetails({ data }) {
          body: JSON.stringify({ id: data._id }),
       })
          .then((res) => res.json())
-         .then((data) => {
-            console.log(data)
-            if(data.success){
-               navigate("/list")
+         .then((check) => {
+            if(check.success){
+               setList(prev => prev.filter((item) => item._id !== data._id))
             }
          })
          .catch((error) => console.error(error));

@@ -6,6 +6,7 @@ const EmployeeSchema = new mongoose.Schema(
          type: String,
          lowercase: true,
          required: true,
+         index: true,
       },
       email: {
          type: String,

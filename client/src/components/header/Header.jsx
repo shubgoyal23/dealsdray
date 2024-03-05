@@ -37,7 +37,7 @@ function Header() {
                to="/list"
                className="font-bold text-sm md:text-xl text-blue-600"
             >
-               Emplayee List
+               Employee List
             </Link>
          </div>
          <div className="flex justify-between items-center gap-6">

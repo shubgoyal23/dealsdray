@@ -5,7 +5,7 @@ import "./index.css";
 import { Provider } from "react-redux";
 import store from "./store/store.js";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { AddEmplayee, AdminPanel, Auth, Home, ListEmplayee } from "./components/index.js";
+import { AddEmployee, AdminPanel, Auth, Home, ListEmployee } from "./components/index.js";
 
 const router = createBrowserRouter([
    {
@@ -16,8 +16,8 @@ const router = createBrowserRouter([
          { path: "/", element: <AdminPanel /> },
          { path: "/login", element: <Auth /> },
          { path: "/home", element: <Home /> },
-         { path: "/list", element: <ListEmplayee /> },
-         { path: "/add/:id", element: <AddEmplayee /> },
+         { path: "/list", element: <ListEmployee /> },
+         { path: "/add/:id", element: <AddEmployee /> },
       ],
    },
 ]);

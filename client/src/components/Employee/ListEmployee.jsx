@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { debounce } from "lodash";
 import EmployeeDetails from "./EmployeeDetails";
-
+import { Link } from "react-router-dom";
 function ListEmplayee() {
    const [list, setList] = useState([]);
    const [search, setSearch] = useState("");
@@ -18,7 +18,7 @@ function ListEmplayee() {
       })
          .then((res) => res.json())
          .then((data) => {
-            let list = data?.data
+            let list = data?.data;
             setList(list);
             setCache((prev) => ({ ...prev, [search]: data.data }));
          })
@@ -31,7 +31,7 @@ function ListEmplayee() {
 
    useEffect(() => {
       if (search === "") {
-        listAllUsers()
+         listAllUsers();
       } else {
          if (cache[search]) {
             setList(cache[search]);
@@ -44,21 +44,25 @@ function ListEmplayee() {
       };
    }, [search, cache, debouncedFindUsers]);
 
-const listAllUsers = () => {
-    fetch("http://localhost:8000/api/v1/employee/list", {
-        credentials: "include",
-     })
-        .then((res) => res.json())
-        .then((data) => setList(data.data))
-        .catch((err) => console.log(err));
-}
+   const listAllUsers = () => {
+      fetch("http://localhost:8000/api/v1/employee/list", {
+         credentials: "include",
+      })
+         .then((res) => res.json())
+         .then((data) => setList(data.data))
+         .catch((err) => console.log(err));
+   };
 
    return (
-      <div className="flex flex-col items-center w-screen min-h-screen ">
+      <div className="flex flex-col items-center w-screen min-h-screen overflow-x-scroll ">
          <div className="w-4/5 flex justify-between mt-10 mb-6 items-center">
+            <h1 className=" underline text-2xl font-bold text-blue-600">
+               <Link to="/add/new">Add Employee</Link>{" "}
+            </h1>
             <h1 className=" underline text-2xl font-bold text-blue-600">
                Employee List
             </h1>
+
             <div className="w-auto h-8 bg-blue-300 rounded-full flex justify-center items-center">
                <input
                   type="text"
@@ -69,7 +73,7 @@ const listAllUsers = () => {
                />
             </div>
          </div>
-         <table className="table-auto border-collapse border border-slate-400 bg-indigo-50">
+         <table className="table-fixed border-collapse border border-slate-400 bg-indigo-50">
             <thead>
                <tr>
                   <th className="border-collapse border border-slate-400">
@@ -106,7 +110,11 @@ const listAllUsers = () => {
             </thead>
             <tbody>
                {list.map((employee) => (
-                  <EmployeeDetails key={employee._id} data={employee} />
+                  <EmployeeDetails
+                     key={employee._id}
+                     data={employee}
+                     setList={setList}
+                  />
                ))}
             </tbody>
          </table>
